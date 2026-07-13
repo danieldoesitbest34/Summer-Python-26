@@ -1,0 +1,6 @@
+age=int(input( "please choose number: "))
+print(f"Ndot at only {age}")
+place=(input("enter location"))
+print(f"ndot finally got a job at {place}")
+animal=int(input("please choose animal"))
+print(f"ndot was caught flirting with the {animal}"4)
