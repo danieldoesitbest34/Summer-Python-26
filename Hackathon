@@ -1,0 +1,121 @@
+import sys
+import pygame
+#setup thingy
+pygame.init()
+pygame.font.init()
+
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("The Peak Game Present A Game")
+
+WHITE = (255, 255, 255)
+BLACK = (20, 20, 20)
+GRAY = (50, 50, 50)
+LIGHT_GRAY = (200, 200, 200)
+GREEN = (40, 100, 80)
+RED = (200, 50, 50)
+GOLD = (240, 190, 40)
+BLUE = (60, 120, 220)
+
+#font
+font_title = pygame.font.SysFont("Arial", 28, bold=True)
+font_body = pygame.font.SysFont("Arial", 18)
+Font_small = pygame.font.SysFont("Arial", 14)
+
+clock = pygame.time.Clock()
+
+#game data
+#weapons for shop
+weapons = {
+    "wooden_sword":{
+        "name":"Wooden Sword",
+        "cost":0,
+        "power":10,
+        "purchased": True,
+    },
+    "iron_sword":{
+        "name":"Iron Sword",
+        "cost": 50,
+        "power": 25,
+        "purchased": False,
+    },
+    "magic_staff":{
+        "name":"Magic Staff",
+        "cost": 150,
+        "power": 60,
+        "purchased": False,
+    },
+    "dragon_slayer":{
+        "name":"Dragon Slayer",
+        "cost": 400,
+        "power": 120,
+        "purchased": False,
+    },
+}
+#enemy
+monsters = [
+    {
+        "name":"Goblin",
+        "defense": 10,
+        "reward": 10,
+        "req_weapon":"wooden_sword",
+    },
+    {
+        "name":"Orc Guard",
+        "defense": 25,
+        "reward": 35,
+        "req_weapon":"iron_sword",
+    },
+    {
+        "name":"Dark Wizard",
+        "defense": 60,
+        "reward": 90,
+        "req_weapon":"magic_staff",
+    },
+    {
+        "name":"Red Dragon",
+        "defense": 120,
+        "reward": 200,
+        "req_weapon":"dragon_slayer",
+    },
+]
+
+#player stat
+player_gold = 0
+message_log = "Medival Combat, Defeat the enemies to unlock weapons"
+message_color = WHITE
+
+#func
+def get_player_attack():
+    """returns highest power from all owned weapons."""
+    max_power = 0
+    for w in weapons.values():
+        if w["purchased"] and w["power"] > max_power:
+            max_power = w["power"]
+    return max_power
+
+def check_win_condition():
+    """weapons purchase checker."""
+    return all(w["purchased"] for w in weapons.value())
+
+def buy_weapon(w_key):
+    """purchasing and currency logic"""
+    global player_gold, message_log, message_color
+
+    weapon = weapon[w_key]
+
+    if weapon["purchased"]:
+        message_log = f"You already own {weapon['name']}!"
+        message_color = LIGHT_GRAY
+        return
+
+    #check players currency still wokring on this theres was bug that still said they dont have enough currency
+    if player_gold >= weapon["cost"]:
+        player_gold -= weapon["cost"]
+        weapon_log = f"Successfully purchased {weapon['name']}!"
+        message_color = GREEN
+    else:
+        #not enough money goes back to selection
+        message_log = f"not enough money"
+        message_color = RED
